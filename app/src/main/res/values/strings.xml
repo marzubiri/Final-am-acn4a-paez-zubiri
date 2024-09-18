@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">parcial-1-am-acn4a-Paez-Zubiri</string>
+    <string name="app_name">Conversor de unidades</string>
+    <string-array name="units_array">
+        <item>Metros</item>
+        <item>Kilómetros</item>
+        <item>Centímetros</item>
+        <item>Pulgadas</item>
+        <item>Pies</item>
+    </string-array>
 </resources>

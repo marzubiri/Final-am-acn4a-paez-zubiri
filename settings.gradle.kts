@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "parcial-1-am-acn4a-Paez-Zubiri"
+rootProject.name = "24.2-clase3"
 include(":app")
  
