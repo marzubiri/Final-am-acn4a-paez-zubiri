@@ -60,10 +60,12 @@
     <!-- Botón para convertir -->
     <Button
         android:id="@+id/convertButton"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Convertir"
+        android:textColor="@android:color/white"
+        android:background="@drawable/rounded_button"
         app:layout_constraintTop_toBottomOf="@id/spinnerTo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
