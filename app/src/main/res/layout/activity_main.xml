@@ -5,56 +5,70 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- LinearLayout para los campos de entrada y spinners -->
-    <LinearLayout
-        android:layout_width="0dp"
+    <!-- Campo de entrada para el valor a convertir -->
+    <EditText
+        android:id="@+id/inputValue"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:hint="Ingrese el valor"
+        android:inputType="numberDecimal"
+        android:layout_marginBottom="16dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"> <!-- Aumentado el margen superior -->
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Campo de entrada para el valor a convertir -->
-        <EditText
-            android:id="@+id/inputValue"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingrese el valor"
-            android:inputType="numberDecimal"
-            android:layout_marginBottom="16dp"/> <!-- Separación del siguiente elemento -->
+    <!-- Etiqueta para el Spinner de unidades de entrada -->
+    <TextView
+        android:id="@+id/labelConvertFrom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Convertir de"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/inputValue"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Selector de unidades de entrada -->
-        <Spinner
-            android:id="@+id/spinnerFrom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"/> <!-- Separación del siguiente elemento -->
+    <!-- Selector de unidades de entrada -->
+    <Spinner
+        android:id="@+id/spinnerFrom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@id/labelConvertFrom"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Selector de unidades de salida -->
-        <Spinner
-            android:id="@+id/spinnerTo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"/> <!-- Separación del siguiente elemento -->
+    <!-- Etiqueta para el Spinner de unidades de salida -->
+    <TextView
+        android:id="@+id/labelConvertTo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Convertir a"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/spinnerFrom"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    </LinearLayout>
+    <!-- Selector de unidades de salida -->
+    <Spinner
+        android:id="@+id/spinnerTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@id/labelConvertTo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Botón para convertir -->
-    <!-- Aumentado el margen superior para mayor espacio -->
-
-    <!-- Texto para mostrar el resultado -->
     <Button
         android:id="@+id/convertButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
+        android:layout_marginTop="16dp"
         android:text="Convertir"
+        app:layout_constraintTop_toBottomOf="@id/spinnerTo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Texto para mostrar el resultado -->
     <TextView
         android:id="@+id/resultText"
         android:layout_width="wrap_content"
