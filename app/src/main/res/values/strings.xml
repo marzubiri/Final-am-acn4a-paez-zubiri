@@ -7,4 +7,6 @@
         <item>Pulgadas</item>
         <item>Pies</item>
     </string-array>
+        <string name="dark_mode">Dark Mode</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package ar.edu.davinci.a242_clase3;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -8,6 +9,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +20,12 @@ public class MainActivity extends AppCompatActivity {
     private EditText inputValue;
     private TextView resultText;
     private Button convertButton;
+    private androidx.appcompat.widget.SwitchCompat darkModeSwitch;
+
+
+    // Variables para SharedPreferences
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         inputValue = findViewById(R.id.inputValue);
         resultText = findViewById(R.id.resultText);
         convertButton = findViewById(R.id.convertButton);
+        darkModeSwitch = findViewById(R.id.darkModeSwitch);
 
         // Configurar el adaptador de los Spinners con el array de unidades
         String[] unitsArray = getResources().getStringArray(R.array.units_array);
@@ -54,6 +64,35 @@ public class MainActivity extends AppCompatActivity {
                     resultText.setText("Por favor, ingrese un valor.");
                 }
             }
+        });
+        // Inicializar SharedPreferences para guardar la preferencia del Dark Mode
+        sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        // Verificar el estado del Dark Mode al iniciar
+        boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
+
+        if (isDarkModeOn) {
+            // Si el modo oscuro está activado, aplicarlo
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            darkModeSwitch.setChecked(true); // Mantener el switch activado
+        } else {
+            // Si el modo claro está activado
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        // Listener para el Switch que alterna el modo oscuro
+        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Activar el modo oscuro
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                editor.putBoolean("isDarkModeOn", true);
+            } else {
+                // Desactivar el modo oscuro
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                editor.putBoolean("isDarkModeOn", false);
+            }
+            editor.apply(); // Guardar la preferencia del usuario
         });
     }
 
