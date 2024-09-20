@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Conversor de unidades</string>
     <string-array name="units_array">
         <item>Metros</item>
         <item>Kilómetros</item>
@@ -7,6 +6,12 @@
         <item>Pulgadas</item>
         <item>Pies</item>
     </string-array>
-        <string name="dark_mode">Dark Mode</string>
+    <string name="app_name">Conversor de Unidades</string>
+    <string name="hint_input_value">Ingrese el valor</string>
+    <string name="label_convert_from">Convertir de</string>
+    <string name="label_convert_to">Convertir a</string>
+    <string name="button_convert">Convertir</string>
+    <string name="result_text">Resultado: </string>
+    <string name="dark_mode_switch">Modo Oscuro</string>
 
 </resources>
