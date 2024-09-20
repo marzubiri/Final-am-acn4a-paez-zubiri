@@ -1,16 +1,19 @@
 package ar.edu.davinci.a242_clase3;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,10 +25,12 @@ public class MainActivity extends AppCompatActivity {
     private Button convertButton;
     private androidx.appcompat.widget.SwitchCompat darkModeSwitch;
 
-
     // Variables para SharedPreferences
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+
+    // Array de imágenes para los Spinners
+    private int[] images = {R.drawable.meter, R.drawable.kilometer, R.drawable.centimeter, R.drawable.inches, R.drawable.feet};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +45,36 @@ public class MainActivity extends AppCompatActivity {
         convertButton = findViewById(R.id.convertButton);
         darkModeSwitch = findViewById(R.id.darkModeSwitch);
 
-        // Configurar el adaptador de los Spinners con el array de unidades
+        // Configurar el adaptador de los Spinners con el array de unidades e imágenes
         String[] unitsArray = getResources().getStringArray(R.array.units_array);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, unitsArray);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerFrom.setAdapter(adapter);
-        spinnerTo.setAdapter(adapter);
+        CustomAdapter customAdapter = new CustomAdapter(this, unitsArray, images);
+        spinnerFrom.setAdapter(customAdapter);
+        spinnerTo.setAdapter(customAdapter);
+
+        // Inicializar SharedPreferences para guardar la preferencia del Dark Mode
+        sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        // Verificar el estado del Dark Mode al iniciar
+        boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
+        if (isDarkModeOn) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            darkModeSwitch.setChecked(true); // Mantener el switch activado
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        // Listener para el Switch que alterna el modo oscuro
+        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                editor.putBoolean("isDarkModeOn", true);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                editor.putBoolean("isDarkModeOn", false);
+            }
+            editor.apply(); // Guardar la preferencia del usuario
+        });
 
         // Manejo del evento de clic en el botón de conversión
         convertButton.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
                 String toUnit = spinnerTo.getSelectedItem().toString();
                 String inputValueStr = inputValue.getText().toString();
 
-                // Verificar que el valor de entrada no esté vacío
                 if (!inputValueStr.isEmpty()) {
                     double value = Double.parseDouble(inputValueStr);
                     double result = convertUnits(value, fromUnit, toUnit);
@@ -65,40 +93,44 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        // Inicializar SharedPreferences para guardar la preferencia del Dark Mode
-        sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+    }
 
-        // Verificar el estado del Dark Mode al iniciar
-        boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
+    // CustomAdapter para agregar imágenes al Spinner
+    public class CustomAdapter extends ArrayAdapter<String> {
+        Context context;
+        String[] unitsArray;
+        int[] images;
 
-        if (isDarkModeOn) {
-            // Si el modo oscuro está activado, aplicarlo
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            darkModeSwitch.setChecked(true); // Mantener el switch activado
-        } else {
-            // Si el modo claro está activado
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        public CustomAdapter(Context context, String[] unitsArray, int[] images) {
+            super(context, R.layout.spinner_item, unitsArray);
+            this.context = context;
+            this.unitsArray = unitsArray;
+            this.images = images;
         }
 
-        // Listener para el Switch que alterna el modo oscuro
-        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                // Activar el modo oscuro
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                editor.putBoolean("isDarkModeOn", true);
-            } else {
-                // Desactivar el modo oscuro
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                editor.putBoolean("isDarkModeOn", false);
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                convertView = LayoutInflater.from(context).inflate(R.layout.spinner_item, parent, false);
             }
-            editor.apply(); // Guardar la preferencia del usuario
-        });
+
+            ImageView spinnerImage = convertView.findViewById(R.id.spinnerImage);
+            TextView spinnerText = convertView.findViewById(R.id.spinnerText);
+
+            spinnerImage.setImageResource(images[position]);
+            spinnerText.setText(unitsArray[position]);
+
+            return convertView;
+        }
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            return getView(position, convertView, parent);
+        }
     }
 
     // Lógica de conversión en Java
     private double convertUnits(double value, String fromUnit, String toUnit) {
-        // Mapa de factores de conversión
         java.util.Map<String, Double> conversionMap = new java.util.HashMap<>();
         conversionMap.put("Metros", 1.0);
         conversionMap.put("Kilómetros", 1000.0);
@@ -106,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
         conversionMap.put("Pulgadas", 0.0254);
         conversionMap.put("Pies", 0.3048);
 
-        double fromFactor = conversionMap.get(fromUnit) != null ? conversionMap.get(fromUnit) : 1.0;
-        double toFactor = conversionMap.get(toUnit) != null ? conversionMap.get(toUnit) : 1.0;
+        double fromFactor = conversionMap.get(fromUnit);
+        double toFactor = conversionMap.get(toUnit);
 
         return value * (fromFactor / toFactor);
     }
