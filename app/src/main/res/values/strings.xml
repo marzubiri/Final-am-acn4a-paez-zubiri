@@ -13,5 +13,8 @@
     <string name="button_convert">Convertir</string>
     <string name="result_text">Resultado: </string>
     <string name="dark_mode_switch">Modo Oscuro</string>
+    <string name="open_drawer">Abrir menú</string>
+    <string name="close_drawer">Cerrar menú</string>
+
 
 </resources>

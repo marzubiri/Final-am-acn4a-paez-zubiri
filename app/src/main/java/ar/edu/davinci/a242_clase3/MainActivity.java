@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -12,8 +13,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.drawerlayout.widget.DrawerLayout;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,10 +37,27 @@ public class MainActivity extends AppCompatActivity {
     // Array de imágenes para los Spinners
     private int[] images = {R.drawable.meter, R.drawable.kilometer, R.drawable.centimeter, R.drawable.inches, R.drawable.feet};
 
+    // Variables para el DrawerLayout y el botón de hamburguesa
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Inicializar DrawerLayout y el NavigationView
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+
+        // Configurar el ActionBarDrawerToggle para el botón de hamburguesa
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open_drawer, R.string.close_drawer);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // Mostrar el botón de hamburguesa en la barra de acción
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Inicializar los componentes de la UI
         spinnerFrom = findViewById(R.id.spinnerFrom);
@@ -93,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    // Método para manejar clics en el botón de hamburguesa
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // CustomAdapter para agregar imágenes al Spinner
