@@ -3,5 +3,5 @@
     <color name="my_dark_background">#000000</color>
     <color name="my_light_primary">#000000</color>
     <color name="my_dark_primary">#FFFFFF</color>
-    <color name="red">#B11B1B</color>
+    <color name="light_gray">#5A5959</color>
 </resources>
