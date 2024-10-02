@@ -2,6 +2,6 @@
     <style name="Theme.MyApp.Dark" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/my_dark_primary</item>
         <item name="android:colorBackground">@color/my_dark_background</item>
-        <!-- Otros colores -->
+
     </style>
 </resources>

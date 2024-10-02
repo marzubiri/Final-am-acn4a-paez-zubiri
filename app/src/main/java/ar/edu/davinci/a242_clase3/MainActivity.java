@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             editor.apply(); // Guardar la preferencia del usuario
         });
 
-        // Manejo del evento de clic en el botón de conversión
+        //  clic en el botón de conversión
         convertButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,11 +110,20 @@ public class MainActivity extends AppCompatActivity {
                     double value = Double.parseDouble(inputValueStr);
                     double result = convertUnits(value, fromUnit, toUnit);
                     resultText.setText("Resultado: " + result + " " + toUnit);
+
+                    //  TextView dinámico
+                    TextView dynamicTextView = new TextView(MainActivity.this);
+                    dynamicTextView.setText("Conversión realizada de " + fromUnit + " a " + toUnit);
+                    dynamicTextView.setTextSize(16);
+
+                    DrawerLayout layout = findViewById(R.id.drawer_layout);
+                    layout.addView(dynamicTextView);
                 } else {
                     resultText.setText("Por favor, ingrese un valor.");
                 }
             }
         });
+
     }
 
     // Método para manejar clics en el botón de hamburguesa
