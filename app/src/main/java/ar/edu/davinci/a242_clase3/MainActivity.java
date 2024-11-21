@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
+import android.content.Intent;
+import androidx.core.view.GravityCompat;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,10 +44,35 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize DrawerLayout and NavigationView
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+
+        // Configure the ActionBarDrawerToggle for the hamburger button
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open_drawer, R.string.close_drawer);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // Show the hamburger button on the action bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Handle navigation item selection
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_new_page) {
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                startActivity(intent);
+            }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        });
+
 
         // Inicializar DrawerLayout y el NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -174,4 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
         return value * (fromFactor / toFactor);
     }
+
+
 }
+
