@@ -11,7 +11,7 @@
         android:id="@+id/imageViewProfile"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:src="@drawable/ic_profile" <!-- Icono de perfil -->
+        android:src="@drawable/ic_profile"
         android:contentDescription="@string/profile_image_desc"
         android:layout_marginTop="32dp"
         app:layout_constraintTop_toTopOf="parent"
