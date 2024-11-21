@@ -16,5 +16,10 @@
     <string name="open_drawer">Abrir menú</string>
     <string name="close_drawer">Cerrar menú</string>
 
+    <string name="profile_image_desc">Imagen de perfil</string>
+    <string name="user_name_placeholder">Nombre del Usuario</string>
+    <string name="user_email_placeholder">correo@ejemplo.com</string>
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="logout">Cerrar Sesión</string>
 
 </resources>

@@ -4,4 +4,11 @@
     <color name="my_light_primary">#000000</color>
     <color name="my_dark_primary">#FFFFFF</color>
     <color name="light_gray">#5A5959</color>
+
+    <color name="background_color">#F5F5F5</color>
+    <color name="primary_color">#6200EE</color>
+    <color name="secondary_color">#03DAC5</color>
+    <color name="primary_text_color">#212121</color>
+    <color name="secondary_text_color">#757575</color>
+
 </resources>
