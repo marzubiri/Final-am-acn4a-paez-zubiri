@@ -21,6 +21,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import android.content.Intent;
 import androidx.core.view.GravityCompat;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Inicializar Firebase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("conversions");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -137,6 +144,9 @@ public class MainActivity extends AppCompatActivity {
                     double value = Double.parseDouble(inputValueStr);
                     double result = convertUnits(value, fromUnit, toUnit);
                     resultText.setText("Resultado: " + result + " " + toUnit);
+                    // Guardar la conversión en Firebase
+                    String conversion = value + " " + fromUnit + " = " + result + " " + toUnit;
+                    ref.push().setValue(conversion);
                 } else {
                     resultText.setText("Por favor, ingrese un valor.");
                 }

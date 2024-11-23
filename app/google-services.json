@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "273849011920",
+    "project_id": "conversorfirebase-1fe6f",
+    "storage_bucket": "conversorfirebase-1fe6f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273849011920:android:e0213fd58d9984fb7958d5",
+        "android_client_info": {
+          "package_name": "ar.edu.davinci.a242_clase3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDToYdf9luDQe_SbUpwpiCwGSnVD6PxY4Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
