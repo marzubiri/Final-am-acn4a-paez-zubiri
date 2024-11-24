@@ -1,6 +1,7 @@
 package ar.edu.davinci.a242_clase3;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,11 @@ public class MyConversionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_conversions);
+
+        // Habilitar el botón de navegación (flecha de regreso)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Inicializar FirebaseAuth
         auth = FirebaseAuth.getInstance();
@@ -73,5 +79,15 @@ public class MyConversionsActivity extends AppCompatActivity {
                 Toast.makeText(MyConversionsActivity.this, "Error al cargar conversiones", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // Manejar clic en la flecha de navegación
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // Regresa a la actividad anterior
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
