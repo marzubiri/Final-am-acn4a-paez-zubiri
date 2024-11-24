@@ -33,7 +33,11 @@ android {
 }
 
 dependencies {
-
+    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("androidx.appcompat:appcompat:1.6.1") // Mantén solo esta referencia
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -41,15 +45,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    // Dependencias de Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.1.1"))
-    implementation("com.google.firebase:firebase-database")
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth:22.1.1")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-
-
 }
+
 
 apply(plugin = "com.google.gms.google-services")

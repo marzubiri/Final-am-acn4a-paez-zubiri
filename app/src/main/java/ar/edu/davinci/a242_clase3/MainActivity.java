@@ -45,19 +45,15 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
 
+    private boolean isGuest; // Bandera para saber si es un usuario invitado
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Verificar si el usuario está autenticado
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) {
-            // Redirigir al usuario a la pantalla de inicio de sesión si no está autenticado
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
-            return; // Detener ejecución
-        }
+        // Obtener la bandera de si es invitado
+        isGuest = getIntent().getBooleanExtra("isGuest", false);
 
         // Inicializar componentes del menú lateral
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -67,18 +63,29 @@ public class MainActivity extends AppCompatActivity {
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Actualizar el menú dinámicamente
+        updateMenu();
+
         // Manejar clics en el menú lateral
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (id == R.id.nav_my_conversions) {
-                // Abrir "Mis Conversiones" si está autenticado
-                startActivity(new Intent(MainActivity.this, MyConversionsActivity.class));
-            } else if (id == R.id.nav_logout) {
-                // Manejar el cierre de sesión
-                FirebaseAuth.getInstance().signOut();
-                Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                finish();
+            if (isGuest) {
+                if (id == R.id.nav_login) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                } else if (id == R.id.nav_register) {
+                    startActivity(new Intent(MainActivity.this, RegisterActivity.class));
+                    finish();
+                }
+            } else {
+                if (id == R.id.nav_my_conversions) {
+                    startActivity(new Intent(MainActivity.this, MyConversionsActivity.class));
+                } else if (id == R.id.nav_logout) {
+                    FirebaseAuth.getInstance().signOut();
+                    Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                }
             }
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
@@ -121,21 +128,33 @@ public class MainActivity extends AppCompatActivity {
                 double result = convertUnits(value, fromUnit, toUnit);
                 resultText.setText("Resultado: " + result + " " + toUnit);
 
-                // Guardar conversión en Firebase
-                if (user != null) {
-                    DatabaseReference ref = FirebaseDatabase.getInstance()
-                            .getReference("users")
-                            .child(user.getUid())
-                            .child("conversions");
-                    String conversion = value + " " + fromUnit + " = " + result + " " + toUnit;
-                    ref.push().setValue(conversion)
-                            .addOnSuccessListener(aVoid -> Toast.makeText(this, "Conversión guardada", Toast.LENGTH_SHORT).show())
-                            .addOnFailureListener(e -> Toast.makeText(this, "Error al guardar conversión", Toast.LENGTH_SHORT).show());
+                if (!isGuest) {
+                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    if (user != null) {
+                        DatabaseReference ref = FirebaseDatabase.getInstance()
+                                .getReference("users")
+                                .child(user.getUid())
+                                .child("conversions");
+                        String conversion = value + " " + fromUnit + " = " + result + " " + toUnit;
+                        ref.push().setValue(conversion)
+                                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Conversión guardada", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> Toast.makeText(this, "Error al guardar conversión", Toast.LENGTH_SHORT).show());
+                    }
                 }
             } else {
                 resultText.setText("Por favor, ingrese un valor.");
             }
         });
+    }
+
+    private void updateMenu() {
+        if (isGuest) {
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.guest_menu);
+        } else {
+            navigationView.getMenu().clear();
+            navigationView.inflateMenu(R.menu.drawer_menu);
+        }
     }
 
     @Override
