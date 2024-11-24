@@ -21,5 +21,7 @@
     <string name="user_email_placeholder">correo@ejemplo.com</string>
     <string name="edit_profile">Editar Perfil</string>
     <string name="logout">Cerrar Sesión</string>
+    <string name="button_login">Login</string>
+    <string name="button_register">Register</string>
 
 </resources>
