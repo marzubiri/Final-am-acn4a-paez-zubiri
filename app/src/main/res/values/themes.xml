@@ -1,11 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Tema base con soporte para ActionBar -->
+
     <style name="Base.Theme._242clase3" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Definir el color primario que se aplicará a los botones -->
-        <item name="colorPrimary">@color/my_dark_primary</item>
+
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorOnPrimary">@color/secondary_text_color</item>
         <item name="colorSecondary">@color/my_dark_primary</item>
+
+        <item name="colorSurface">@color/background_color</item>
+        <item name="colorOnSurface">@color/primary_text_color</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/my_dark_primary</item>
-        <!-- Agrega otros atributos si es necesario -->
+
     </style>
 
     <!-- Tema general de la app -->

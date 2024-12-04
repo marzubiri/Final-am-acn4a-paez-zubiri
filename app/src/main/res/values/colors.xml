@@ -5,5 +5,9 @@
     <color name="secondary_color">#03DAC5</color>
     <color name="primary_text_color">#212121</color>
     <color name="secondary_text_color">#757575</color>
+    <color name="my_dark_background">#000000</color> <!-- Fondo en modo oscuro -->
+    <color name="my_dark_primary">#FFFFFF</color> <!-- Texto principal en modo oscuro -->
+    <color name="button_background">#FFFFFF</color> <!-- Fondo del botón en modo oscuro -->
+    <color name="button_text">#000000</color> <!-- Texto del botón en modo oscuro -->
 
 </resources>
