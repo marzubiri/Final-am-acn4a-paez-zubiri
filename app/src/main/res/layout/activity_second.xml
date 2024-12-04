@@ -68,25 +68,26 @@
         android:layout_marginBottom="16dp" />
 
     <!-- Botón para cambiar la contraseña -->
-    <Button
-        android:id="@+id/changePasswordButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cambiar contraseña"
-        app:layout_constraintTop_toBottomOf="@id/confirmNewPasswordEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
 
     <!-- Botón para cerrar sesión -->
     <Button
-        android:id="@+id/logoutButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cerrar sesión"
-        app:layout_constraintTop_toBottomOf="@id/changePasswordButton"
-        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/changePasswordButton"
+        style="@style/RoundedButton"
+        android:layout_marginTop="16dp"
+        android:text="Cambiar contraseña"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/confirmNewPasswordEditText" />
+
+    <Button
+        android:id="@+id/logoutButton"
+        style="@style/RoundedButton"
+        android:layout_marginTop="4dp"
+        android:text="Cerrar sesión"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/changePasswordButton" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
