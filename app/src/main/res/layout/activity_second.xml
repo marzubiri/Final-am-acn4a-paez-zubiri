@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <!-- Imagen del perfil -->
+    <ImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_profile"
+        android:contentDescription="Imagen de perfil"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
     <!-- Campo para mostrar el correo del usuario -->
     <TextView
         android:id="@+id/userEmailTextView"
@@ -14,10 +26,10 @@
         android:text="Correo: user@example.com"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="24dp" />
 
     <!-- Campo de entrada para la contraseña actual -->
     <EditText
