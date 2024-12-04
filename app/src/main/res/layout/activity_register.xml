@@ -31,28 +31,35 @@
         android:layout_marginBottom="16dp" />
 
     <!-- Botón para registrarse -->
+
+    <!-- Botón para ir a iniciar sesión -->
+
+    <!-- Enlace para ingresar sin registrarse -->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_button"
         android:text="Registrarse"
-        app:layout_constraintTop_toBottomOf="@id/passwordEditText"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordEditText" />
 
-    <!-- Botón para ir a iniciar sesión -->
     <Button
         android:id="@+id/goToLoginButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_button"
         android:text="Iniciar sesión"
-        app:layout_constraintTop_toBottomOf="@id/registerButton"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="16dp" />
+        app:layout_constraintHorizontal_bias="0.51"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/registerButton" />
 
-    <!-- Enlace para ingresar sin registrarse -->
     <TextView
         android:id="@+id/guestLoginLink"
         android:layout_width="wrap_content"
