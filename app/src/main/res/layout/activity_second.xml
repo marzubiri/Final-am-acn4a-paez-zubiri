@@ -4,72 +4,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color">
+    android:padding="16dp">
 
-    <!-- Imagen de perfil -->
-    <ImageView
-        android:id="@+id/imageViewProfile"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/ic_profile"
-        android:contentDescription="@string/profile_image_desc"
-        android:layout_marginTop="32dp"
+    <!-- Campo para mostrar el correo del usuario -->
+    <TextView
+        android:id="@+id/userEmailTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Correo: user@example.com"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:scaleType="centerCrop"
-        android:background="@drawable/circle_background" />
+        android:layout_marginBottom="24dp" />
 
-    <!-- Nombre del usuario -->
-    <TextView
-        android:id="@+id/textViewName"
-        android:layout_width="wrap_content"
+    <!-- Campo de entrada para la contraseña actual -->
+    <EditText
+        android:id="@+id/currentPasswordEditText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/user_name_placeholder"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/imageViewProfile"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textColor="@color/primary_text_color" />
+        android:hint="Contraseña actual"
+        android:inputType="textPassword" />
 
-    <!-- Correo de usuario -->
-    <TextView
-        android:id="@+id/textViewEmail"
-        android:layout_width="wrap_content"
+
+    <!-- Campo de entrada para la nueva contraseña -->
+    <EditText
+        android:id="@+id/newPasswordEditText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/user_email_placeholder"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/textViewName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textColor="@color/secondary_text_color" />
+        android:hint="Nueva contraseña"
+        android:inputType="textPassword" />
 
-    <!-- Botón para editar perfil -->
+    <!-- Campo de entrada para confirmar la nueva contraseña -->
+    <EditText
+        android:id="@+id/confirmNewPasswordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Confirmar nueva contraseña"
+        android:inputType="textPassword" />
+
+    <!-- Botón para cambiar la contraseña -->
     <Button
-        android:id="@+id/buttonEditProfile"
+        android:id="@+id/changePasswordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/edit_profile"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/textViewEmail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:backgroundTint="@color/primary_color"
-        android:textColor="@android:color/white" />
+        android:text="Cambiar contraseña" />
 
-    <!-- Boton para cerrar sesión -->
+    <!-- Botón para cerrar sesión -->
     <Button
-        android:id="@+id/buttonLogout"
+        android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/logout"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/buttonEditProfile"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:backgroundTint="@color/secondary_color"
-        android:textColor="@android:color/white" />
+        android:text="Cerrar sesión" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
