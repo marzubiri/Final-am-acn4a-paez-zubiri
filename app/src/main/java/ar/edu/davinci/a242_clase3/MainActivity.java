@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 if (id == R.id.nav_my_conversions) {
                     startActivity(new Intent(MainActivity.this, MyConversionsActivity.class));
+                } else if (id == R.id.nav_profile) {
+                    startActivity(new Intent(MainActivity.this, SecondActivity.class));
                 } else if (id == R.id.nav_logout) {
                     FirebaseAuth.getInstance().signOut();
                     Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
