@@ -26,8 +26,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,14 +50,29 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView navigationView;
 
     private boolean isGuest; // Bandera para saber si es un usuario invitado
+    private String guestId; // ID único para invitados
+    private FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Inicializar Firestore
+        firestore = FirebaseFirestore.getInstance();
+
         // Obtener la bandera de si es invitado
         isGuest = getIntent().getBooleanExtra("isGuest", false);
+
+        // Si es invitado, generar un ID único
+        if (isGuest) {
+            SharedPreferences preferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+            guestId = preferences.getString("guestId", null);
+            if (guestId == null) {
+                guestId = UUID.randomUUID().toString();
+                preferences.edit().putString("guestId", guestId).apply();
+            }
+        }
 
         // Inicializar componentes del menú lateral
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -130,23 +149,50 @@ public class MainActivity extends AppCompatActivity {
                 double result = convertUnits(value, fromUnit, toUnit);
                 resultText.setText("Resultado: " + result + " " + toUnit);
 
-                if (!isGuest) {
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                    if (user != null) {
-                        DatabaseReference ref = FirebaseDatabase.getInstance()
-                                .getReference("users")
-                                .child(user.getUid())
-                                .child("conversions");
-                        String conversion = value + " " + fromUnit + " = " + result + " " + toUnit;
-                        ref.push().setValue(conversion)
-                                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Conversión guardada", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> Toast.makeText(this, "Error al guardar conversión", Toast.LENGTH_SHORT).show());
-                    }
+                if (isGuest) {
+                    saveConversionAsGuest(fromUnit, toUnit, value, result);
+                } else {
+                    saveConversionAsUser(fromUnit, toUnit, value, result);
                 }
             } else {
                 resultText.setText("Por favor, ingrese un valor.");
             }
         });
+    }
+
+    private void saveConversionAsGuest(String fromUnit, String toUnit, double inputValue, double resultValue) {
+        Map<String, Object> conversionData = new HashMap<>();
+        conversionData.put("fromUnit", fromUnit);
+        conversionData.put("toUnit", toUnit);
+        conversionData.put("inputValue", inputValue);
+        conversionData.put("resultValue", resultValue);
+
+        firestore.collection("guests").document(guestId)
+                .collection("conversions")
+                .add(conversionData)
+                .addOnSuccessListener(documentReference ->
+                        Toast.makeText(this, "Conversión guardada como invitado", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void saveConversionAsUser(String fromUnit, String toUnit, double inputValue, double resultValue) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        Map<String, Object> conversionData = new HashMap<>();
+        conversionData.put("fromUnit", fromUnit);
+        conversionData.put("toUnit", toUnit);
+        conversionData.put("inputValue", inputValue);
+        conversionData.put("resultValue", resultValue);
+
+        firestore.collection("users").document(user.getUid())
+                .collection("conversions")
+                .add(conversionData)
+                .addOnSuccessListener(documentReference ->
+                        Toast.makeText(this, "Conversión guardada", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void updateMenu() {

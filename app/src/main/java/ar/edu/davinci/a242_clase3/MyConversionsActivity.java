@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 
@@ -23,7 +22,9 @@ public class MyConversionsActivity extends AppCompatActivity {
     private ConversionsAdapter adapter;
     private ArrayList<String> conversionsList;
     private FirebaseAuth auth;
-    private DatabaseReference databaseReference;
+    private FirebaseFirestore firestore;
+    private boolean isGuest;
+    private String guestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,20 +36,15 @@ public class MyConversionsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        // Inicializar FirebaseAuth
+        // Inicializar FirebaseAuth y Firestore
         auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
-        // Verificar si el usuario está autenticado
-        if (auth.getCurrentUser() == null) {
-            Toast.makeText(this, "Debes iniciar sesión para ver tus conversiones", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
+        // Verificar si el usuario es invitado
+        isGuest = getIntent().getBooleanExtra("isGuest", false);
+        if (isGuest) {
+            guestId = getSharedPreferences("AppPreferences", MODE_PRIVATE).getString("guestId", null);
         }
-
-        // Inicializar DatabaseReference
-        databaseReference = FirebaseDatabase.getInstance().getReference("users")
-                .child(auth.getCurrentUser().getUid())
-                .child("conversions");
 
         // Inicializar RecyclerView y lista
         conversionsRecyclerView = findViewById(R.id.conversionsRecyclerView);
@@ -63,20 +59,53 @@ public class MyConversionsActivity extends AppCompatActivity {
     }
 
     private void loadUserConversions() {
-        databaseReference.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        if (isGuest) {
+            loadGuestConversions();
+        } else {
+            loadUserConversionsFromFirestore();
+        }
+    }
+
+    private void loadGuestConversions() {
+        if (guestId == null) {
+            Toast.makeText(this, "No se encontraron conversiones para el invitado.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        CollectionReference guestConversionsRef = firestore.collection("guests").document(guestId).collection("conversions");
+        guestConversionsRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
                 conversionsList.clear();
-                for (DataSnapshot conversionSnapshot : snapshot.getChildren()) {
-                    String conversion = conversionSnapshot.getValue(String.class);
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String conversion = document.getString("fromUnit") + " -> " + document.getString("toUnit") +
+                            ": " + document.getDouble("inputValue") + " = " + document.getDouble("resultValue");
                     conversionsList.add(conversion);
                 }
                 adapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(this, "Error al cargar conversiones para el invitado.", Toast.LENGTH_SHORT).show();
             }
+        });
+    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(MyConversionsActivity.this, "Error al cargar conversiones", Toast.LENGTH_SHORT).show();
+    private void loadUserConversionsFromFirestore() {
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(this, "Usuario no autenticado.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        CollectionReference userConversionsRef = firestore.collection("users").document(auth.getCurrentUser().getUid()).collection("conversions");
+        userConversionsRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                conversionsList.clear();
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String conversion = document.getString("fromUnit") + " -> " + document.getString("toUnit") +
+                            ": " + document.getDouble("inputValue") + " = " + document.getDouble("resultValue");
+                    conversionsList.add(conversion);
+                }
+                adapter.notifyDataSetChanged();
+            } else {
+                Toast.makeText(this, "Error al cargar conversiones del usuario.", Toast.LENGTH_SHORT).show();
             }
         });
     }

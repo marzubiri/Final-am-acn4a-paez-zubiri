@@ -37,7 +37,8 @@ dependencies {
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
-    implementation("androidx.appcompat:appcompat:1.6.1") // Mantén solo esta referencia
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation ("com.google.firebase:firebase-firestore")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
