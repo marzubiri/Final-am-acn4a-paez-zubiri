@@ -1,10 +1,12 @@
 package ar.edu.davinci.a242_clase3;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +22,12 @@ public class SecondActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
+
+        // Habilitar la flecha de navegación
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("Perfil");
+        }
 
         auth = FirebaseAuth.getInstance();
 
@@ -46,7 +54,6 @@ public class SecondActivity extends AppCompatActivity {
 
             FirebaseUser user = auth.getCurrentUser();
             if (user != null) {
-                // Actualiza la contraseña del usuario
                 user.updatePassword(newPassword).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Contraseña actualizada con éxito", Toast.LENGTH_SHORT).show();
@@ -62,7 +69,17 @@ public class SecondActivity extends AppCompatActivity {
         logoutButton.setOnClickListener(v -> {
             auth.signOut();
             Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
-            finish(); // Opcional: puedes redirigir al login
+            finish();
         });
+    }
+
+    // Manejar el clic en la flecha de navegación
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // Regresa a la actividad anterior
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
