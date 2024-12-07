@@ -26,7 +26,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -61,19 +60,6 @@ public class MainActivity extends AppCompatActivity {
         // Inicializar Firestore
         firestore = FirebaseFirestore.getInstance();
 
-        // Obtener la bandera de si es invitado
-        isGuest = getIntent().getBooleanExtra("isGuest", false);
-
-        // Si es invitado, generar un ID único
-        if (isGuest) {
-            SharedPreferences preferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
-            guestId = preferences.getString("guestId", null);
-            if (guestId == null) {
-                guestId = UUID.randomUUID().toString();
-                preferences.edit().putString("guestId", guestId).apply();
-            }
-        }
-
         // Inicializar componentes del menú lateral
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -81,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // Actualizar el menú dinámicamente
-        updateMenu();
 
         // Manejar clics en el menú lateral
         navigationView.setNavigationItemSelectedListener(item -> {
@@ -103,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(new Intent(MainActivity.this, SecondActivity.class));
                 } else if (id == R.id.nav_logout) {
                     FirebaseAuth.getInstance().signOut();
+                    editor.putBoolean("isGuest", true).apply(); // Marcar como invitado tras el logout
                     Toast.makeText(this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                     finish();
@@ -111,6 +95,17 @@ public class MainActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
+
+        // Inicializar SharedPreferences
+        sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+
+        // Verificar estado de autenticación al inicio
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        isGuest = user == null;
+
+        // Actualizar el menú dinámicamente
+        updateMenu();
 
         // Inicializar componentes de la UI
         spinnerFrom = findViewById(R.id.spinnerFrom);
@@ -128,8 +123,6 @@ public class MainActivity extends AppCompatActivity {
         spinnerTo.setAdapter(customAdapter);
 
         // Configurar modo oscuro
-        sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
         boolean isDarkModeOn = sharedPreferences.getBoolean("isDarkModeOn", false);
         AppCompatDelegate.setDefaultNightMode(isDarkModeOn ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         darkModeSwitch.setChecked(isDarkModeOn);
@@ -160,6 +153,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Verificar el estado del usuario
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        isGuest = user == null;
+
+        // Actualizar el menú según el estado
+        updateMenu();
+    }
+
     private void saveConversionAsGuest(String fromUnit, String toUnit, double inputValue, double resultValue) {
         Map<String, Object> conversionData = new HashMap<>();
         conversionData.put("fromUnit", fromUnit);
@@ -167,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         conversionData.put("inputValue", inputValue);
         conversionData.put("resultValue", resultValue);
 
-        firestore.collection("guests").document(guestId)
+        firestore.collection("guests").document(UUID.randomUUID().toString())
                 .collection("conversions")
                 .add(conversionData)
                 .addOnSuccessListener(documentReference ->
