@@ -33,10 +33,6 @@
 
     <!-- Botón para iniciar sesión -->
 
-    <!-- Botón para ir a la pantalla de registro -->
-
-
-    <!-- Enlace para ingresar sin registrarse -->
     <Button
         android:id="@+id/registerRedirectButton"
         android:layout_width="wrap_content"
@@ -49,6 +45,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/loginButton" />
 
+    <!-- Botón para ir a la pantalla de registro -->
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
@@ -62,13 +59,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/passwordEditText" />
 
+    <!-- Enlace para ingresar sin registrarse -->
     <TextView
         android:id="@+id/guestLoginLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Ingresar sin registrarme"
-        android:textColor="@color/primary_text_color"
+        android:textColor="@android:color/holo_green_dark"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
